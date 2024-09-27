@@ -1,8 +1,9 @@
 import Input from '../Input'
 import styled from 'styled-components';
+import { useState } from 'react';
+import { discos } from './dadosPesquisa'
 
 const PesquisaContainer = styled.section`
-    background-image: linear-gradient(90deg, #002F52 35%, #326589 165%);
     color: #FFF;
     text-align: center;
     padding: 85px 0;
@@ -23,14 +24,50 @@ const SubTitulo = styled.h3`
     margin-bottom: 40px;
 `
 
+const Resultado = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    p {
+        width: 200px;
+    }
+    img {
+        width: 200px;
+    }
+    &:hover {
+        border: 1px solid white;
+    }
+`
+
 function Pesquisa(){
+    const [discosPesquisados, setDiscosPesquisados] = useState([])
+
     return(
         <PesquisaContainer>
             <Titulo>Já sabe por onde começar?</Titulo>
             <SubTitulo>Encontre seu disco favorito</SubTitulo>
             <Input
             placeholder="Digite sua próxima compra"
+            onBlur={evento => {
+                const textoDigitado = evento.target.value
+                const resultadoPesquisa = discos.filter( disco => disco.nome.includes(textoDigitado))
+                setDiscosPesquisados(resultadoPesquisa)
+
+            }}
             />
+
+            { discosPesquisados.map( disco => (
+                <Resultado>
+                    <img src={ disco.src } alt='capa do album'></img>
+                    <p>Nome: { disco.nome }</p>
+                    <p>Artista: { disco.artista }</p>
+                    <p>Ano: { disco.ano }</p>
+                    <p>Gênero: { disco.genero }</p>
+                </Resultado>
+            )) }
+
             
         </PesquisaContainer>
     )
